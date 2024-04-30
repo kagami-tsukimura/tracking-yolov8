@@ -1,9 +1,13 @@
+import os
+
 import cv2
 from ultralytics import YOLO
 
 output_dir = "./outputs"
 output_file_path = f"{output_dir}/camera_tracking.mp4"
 
+# 出力先なければ作成
+os.makedirs("./outputs", exist_ok=True)
 
 # カメラの読み込み
 cap = cv2.VideoCapture(1)
