@@ -15,6 +15,8 @@ This project focuses on the object detection task using the [YOLOv8](https://git
 
 4. Please execute with the following code.
 
+- Detection for Camera
+
    ```bash: Detection for Camera
    python3 object_detection_yolov8.py
    ```
