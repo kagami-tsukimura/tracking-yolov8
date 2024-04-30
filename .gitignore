@@ -1,0 +1,5 @@
+/outputs
+/videos
+/runs
+/weights
+*.py
