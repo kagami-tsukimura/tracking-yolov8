@@ -130,9 +130,9 @@ def main(args):
                         f"#{id} {cls_name} ({counter})",
                         (box[0], box[1] - 5),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        2.0,
-                        (0, 0, 255),
-                        thickness=4,
+                        fontScale=MEDIUM,
+                        color=RED,
+                        thickness=LARGE,
                     )
                     is_person = True
 
@@ -147,9 +147,9 @@ def main(args):
                         f"#{id} {cls_name}",
                         (box[0], box[1] - 5),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 255, 0),
-                        thickness=1,
+                        fontScale=SMALL,
+                        color=BLUE,
+                        thickness=SMALL,
                     )
         except Exception as e:
             print(e)
