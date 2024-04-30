@@ -11,7 +11,12 @@ os.makedirs("./outputs", exist_ok=True)
 
 # カメラの読み込み
 cap = cv2.VideoCapture(1)
+# 1280*720 にリサイズ
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
 
+cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
+# cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y', 'U', 'Y', 'V'));
 
 CLIP_FPS = cap.get(cv2.CAP_PROP_FPS)
 BG_COLOR = (79, 62, 70)
