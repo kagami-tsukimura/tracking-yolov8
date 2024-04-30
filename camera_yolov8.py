@@ -123,7 +123,13 @@ def main(args):
             cls_list = result.boxes.cls.cpu().numpy().astype(int)
             for box, id, cls in zip(boxes, ids, cls_list):
                 cls_name = model.names[cls]
-                cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
+                cv2.rectangle(
+                    frame,
+                    (box[0], box[1]),
+                    (box[2], box[3]),
+                    color=GREEN,
+                    thickness=MEDIUM,
+                )
                 if cls_name == PERSON:
                     cv2.putText(
                         frame,
