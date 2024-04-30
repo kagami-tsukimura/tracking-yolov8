@@ -39,6 +39,7 @@ print("start detection")
 results = model.track(
     source=file_path,
     tracker="bytetrack.yaml",
+    # 人に限定して検知（すべて検知したい場合はclassesをコメントアウト）
     classes=[0],
     persist=True,
 )
