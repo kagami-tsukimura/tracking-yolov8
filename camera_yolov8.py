@@ -60,10 +60,19 @@ def release(video, cap):
 
 
 def main(args):
+    # 定数
+    PERSON = "person"
+    BLUE = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    RED = (0, 0, 255)
+    SMALL = 1
+    MEDIUM = 2
+    LARGE = 4
+
     output_dir = "./outputs"
     output_file_path = f"{output_dir}/{args.output}"
 
-    # 出力先なければ作成
+    # 出力先がなければ作成
     os.makedirs(output_dir, exist_ok=True)
 
     # カメラの読み込み（/video0不具合のため/video1使用）
@@ -115,7 +124,7 @@ def main(args):
             for box, id, cls in zip(boxes, ids, cls_list):
                 cls_name = model.names[cls]
                 cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
-                if cls_name == "person":
+                if cls_name == PERSON:
                     cv2.putText(
                         frame,
                         f"#{id} {cls_name} ({counter})",
