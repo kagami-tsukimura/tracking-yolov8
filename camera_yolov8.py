@@ -53,7 +53,32 @@ while cap.isOpened():
         for box, id, cls in zip(boxes, ids, cls_list):
             cls_name = model.names[cls]
             cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
+            if cls_name == "person":
+                cv2.putText(
+                    frame,
+                    f"#{id} {cls_name} ({counter})",
+                    (box[0], box[1] - 5),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    2.0,
+                    (0, 0, 255),
+                    thickness=4,
+                )
+                is_person = True
 
+                if counter >= person_thr:
+                    frame = cv2.addWeighted(
+                        src1=frame, alpha=0.8, src2=overlay, beta=0.3, gamma=0
+                    )
+            else:
+                cv2.putText(
+                    frame,
+                    f"#{id} {cls_name}",
+                    (box[0], box[1] - 5),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 0),
+                    1,
+                )
     except Exception as e:
         print(e)
         print("There are no objects")
