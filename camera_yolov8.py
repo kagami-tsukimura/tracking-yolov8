@@ -56,9 +56,12 @@ def main():
         results = model.track(frame, persist=True)
         result = results[0]
 
+        # 推論結果からbboxの座標取得
         boxes = result.boxes.xyxy.cpu().numpy().astype(int)
         try:
+            # 推論結果からbboxのクラスID取得
             ids = result.boxes.id.cpu().numpy().astype(int)
+            # 推論結果からbboxのクラス名取得
             cls_list = result.boxes.cls.cpu().numpy().astype(int)
             for box, id, cls in zip(boxes, ids, cls_list):
                 cls_name = model.names[cls]
@@ -76,6 +79,7 @@ def main():
                     is_person = True
 
                     if counter >= person_thr:
+                        # Alert!
                         frame = cv2.addWeighted(
                             src1=frame, alpha=0.8, src2=overlay, beta=0.3, gamma=0
                         )
@@ -87,7 +91,7 @@ def main():
                         cv2.FONT_HERSHEY_SIMPLEX,
                         1,
                         (0, 255, 0),
-                        1,
+                        thickness=1,
                     )
         except Exception as e:
             print(e)
