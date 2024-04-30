@@ -67,6 +67,14 @@ while cap.isOpened():
 
         cv2.imshow("frame", frame)
         video.write(frame)
+        key = cv2.waitKey(1)
+        if key != -1:
+            print("STOP PLAY")
+            # videoの書き込み/読み込み終了
+            video.release()
+            cap.release()
+            cv2.destroyAllWindows()
+            break
 
 
 # videoの書き込み/読み込み終了
