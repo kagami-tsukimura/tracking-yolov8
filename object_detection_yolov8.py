@@ -88,8 +88,8 @@ def main(args):
         cap = cv2.VideoCapture(args.video)
         alpha = 0.99
     else:
-        # カメラの読み込み（/video0不具合のため/video1使用）
-        cap = cv2.VideoCapture(1)
+        # カメラの読み込み
+        cap = cv2.VideoCapture(0)
     # camera_width*camera_height にリサイズ
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.camera_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.camera_height)
