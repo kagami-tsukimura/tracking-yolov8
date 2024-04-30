@@ -4,6 +4,14 @@ import cv2
 from ultralytics import YOLO
 
 
+def release(video, cap):
+    # videoの書き込み/読み込み終了
+    print("end detection")
+    video.release()
+    cap.release()
+    cv2.destroyAllWindows()
+
+
 def main():
     output_dir = "./outputs"
     output_file_path = f"{output_dir}/camera_tracking.mp4"
@@ -36,6 +44,8 @@ def main():
     is_person = False
     # 閾値（人検知の連続フレーム数がこの値を超えたら警告）
     person_thr = 100
+
+    print("start detection")
 
     # キーが押されるまで
     while cap.isOpened():
@@ -95,16 +105,10 @@ def main():
             key = cv2.waitKey(1)
             if key != -1:
                 print("STOP PLAY")
-                # videoの書き込み/読み込み終了
-                video.release()
-                cap.release()
-                cv2.destroyAllWindows()
+                release(video, cap)
                 break
 
-    # videoの書き込み/読み込み終了
-    video.release()
-    cap.release()
-    cv2.destroyAllWindows()
+    release(video, cap)
 
 
 if __name__ == "__main__":
