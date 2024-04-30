@@ -105,7 +105,6 @@ def main():
             key = cv2.waitKey(1)
             if key != -1:
                 print("STOP PLAY")
-                release(video, cap)
                 break
 
     release(video, cap)
