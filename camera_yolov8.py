@@ -1,7 +1,54 @@
+import argparse
 import os
+from datetime import datetime
 
 import cv2
 from ultralytics import YOLO
+
+
+def print_arguments(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        print("arguments------")
+        for key, value in vars(result).items():
+            print(f"{key}: {value}")
+        print("------arguments")
+        return result
+
+    return wrapper
+
+
+@print_arguments
+def parse_arguments():
+    now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
+
+    parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
+
+    parser.add_argument(
+        "-o",
+        "--output",
+        default=f"{now}_tracking.mp4",
+        type=str,
+        help="Output file path",
+    )
+    parser.add_argument(
+        "-cw", "--camera_width", default=1280, type=int, help="Sizes camera width"
+    )
+    parser.add_argument(
+        "-ch", "--camera_height", default=720, type=int, help="Sizes camera height"
+    )
+    parser.add_argument(
+        "-w",
+        "--weights",
+        default="./weights/yolov8s.pt",
+        type=str,
+        help="File path of object detection model",
+    )
+    parser.add_argument(
+        "-t", "--thr", default=100, type=int, help="Person continuous threshold"
+    )
+
+    return parser.parse_args()
 
 
 def release(video, cap):
@@ -12,19 +59,29 @@ def release(video, cap):
     cv2.destroyAllWindows()
 
 
-def main():
+def main(args):
+    # 定数
+    PERSON = "person"
+    BLUE = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    RED = (0, 0, 255)
+    SMALL = 1
+    MEDIUM = 2
+    LARGE = 4
+
     output_dir = "./outputs"
-    output_file_path = f"{output_dir}/camera_tracking.mp4"
+    output_file_path = f"{output_dir}/{args.output}"
 
-    # 出力先なければ作成
-    os.makedirs("./outputs", exist_ok=True)
+    # 出力先がなければ作成
+    os.makedirs(output_dir, exist_ok=True)
 
-    # カメラの読み込み
+    # カメラの読み込み（/video0不具合のため/video1使用）
     cap = cv2.VideoCapture(1)
-    # 1280*720 にリサイズ
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    # camera_width*camera_height にリサイズ
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.camera_width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.camera_height)
 
+    # FPS確保のため圧縮
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
     # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y', 'U', 'Y', 'V'));
 
@@ -34,16 +91,17 @@ def main():
 
     codec = cv2.VideoWriter_fourcc("m", "p", "4", "v")
     video = cv2.VideoWriter(output_file_path, codec, CLIP_FPS, (W, H))
-    model = YOLO("./weights/yolov8s.pt")
+    model = YOLO(args.weights)
 
-    overlay_image = cv2.imread("./images/danger.png", cv2.COLOR_BGR2RGB)
+    danger_file_path = "./images/danger.png"
+    overlay_image = cv2.imread(danger_file_path, cv2.COLOR_BGR2RGB)
     overlay = cv2.resize(overlay_image, (W, H))
 
     # 滞留カウンタ
     counter = 0
     is_person = False
     # 閾値（人検知の連続フレーム数がこの値を超えたら警告）
-    person_thr = 100
+    person_thr = args.thr
 
     print("start detection")
 
@@ -65,16 +123,22 @@ def main():
             cls_list = result.boxes.cls.cpu().numpy().astype(int)
             for box, id, cls in zip(boxes, ids, cls_list):
                 cls_name = model.names[cls]
-                cv2.rectangle(frame, (box[0], box[1]), (box[2], box[3]), (0, 255, 0), 2)
-                if cls_name == "person":
+                cv2.rectangle(
+                    frame,
+                    (box[0], box[1]),
+                    (box[2], box[3]),
+                    color=GREEN,
+                    thickness=MEDIUM,
+                )
+                if cls_name == PERSON:
                     cv2.putText(
                         frame,
                         f"#{id} {cls_name} ({counter})",
                         (box[0], box[1] - 5),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        2.0,
-                        (0, 0, 255),
-                        thickness=4,
+                        fontScale=MEDIUM,
+                        color=RED,
+                        thickness=LARGE,
                     )
                     is_person = True
 
@@ -89,9 +153,9 @@ def main():
                         f"#{id} {cls_name}",
                         (box[0], box[1] - 5),
                         cv2.FONT_HERSHEY_SIMPLEX,
-                        1,
-                        (0, 255, 0),
-                        thickness=1,
+                        fontScale=SMALL,
+                        color=BLUE,
+                        thickness=SMALL,
                     )
         except Exception as e:
             print(e)
@@ -115,4 +179,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    args = parse_arguments()
+    main(args)
