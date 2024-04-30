@@ -1,7 +1,38 @@
+import argparse
 import os
 
 import cv2
 from ultralytics import YOLO
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
+
+    parser.add_argument(
+        "-t", "--thr", default=100, type=int, help="Person continuous threshold"
+    )
+    parser.add_argument(
+        "-cw", "--camera_width", default=1280, type=int, help="Sizes camera width"
+    )
+    parser.add_argument(
+        "-ch", "--camera_height", default=720, type=int, help="Sizes camera height"
+    )
+    parser.add_argument(
+        "-w",
+        "--weights",
+        default="./weights/yolov8s.pt",
+        type=str,
+        help="File path of object detection model",
+    )
+
+    args = parser.parse_args()
+
+    print("arguments------")
+    for key, value in vars(args).items():
+        print(f"{key}: {value}")
+    print("------arguments")
+
+    return args
 
 
 def release(video, cap):
@@ -115,4 +146,6 @@ def main():
 
 
 if __name__ == "__main__":
+
+    args = parse_arguments()
     main()
