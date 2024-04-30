@@ -104,7 +104,7 @@ def main():
             video.write(frame)
             key = cv2.waitKey(1)
             if key != -1:
-                print("STOP PLAY")
+                print("STOP PLAY!!!")
                 break
 
     release(video, cap)
