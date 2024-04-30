@@ -1,15 +1,35 @@
 import argparse
 import os
+from datetime import datetime
 
 import cv2
 from ultralytics import YOLO
 
 
+def print_arguments(func):
+    def wrapper(*args, **kwargs):
+        result = func(*args, **kwargs)
+        print("arguments------")
+        for key, value in vars(result).items():
+            print(f"{key}: {value}")
+        print("------arguments")
+        return result
+
+    return wrapper
+
+
+@print_arguments
 def parse_arguments():
+    now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
+
     parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
 
     parser.add_argument(
-        "-t", "--thr", default=100, type=int, help="Person continuous threshold"
+        "-o",
+        "--output",
+        default=f"{now}_tracking.mp4",
+        type=str,
+        help="Output file path",
     )
     parser.add_argument(
         "-cw", "--camera_width", default=1280, type=int, help="Sizes camera width"
@@ -24,15 +44,11 @@ def parse_arguments():
         type=str,
         help="File path of object detection model",
     )
+    parser.add_argument(
+        "-t", "--thr", default=100, type=int, help="Person continuous threshold"
+    )
 
-    args = parser.parse_args()
-
-    print("arguments------")
-    for key, value in vars(args).items():
-        print(f"{key}: {value}")
-    print("------arguments")
-
-    return args
+    return parser.parse_args()
 
 
 def release(video, cap):
@@ -43,19 +59,20 @@ def release(video, cap):
     cv2.destroyAllWindows()
 
 
-def main():
+def main(args):
     output_dir = "./outputs"
-    output_file_path = f"{output_dir}/camera_tracking.mp4"
+    output_file_path = f"{output_dir}/{args.output}"
 
     # 出力先なければ作成
-    os.makedirs("./outputs", exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
-    # カメラの読み込み
+    # カメラの読み込み（/video0不具合のため/video1使用）
     cap = cv2.VideoCapture(1)
-    # 1280*720 にリサイズ
-    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    # camera_width*camera_height にリサイズ
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.camera_width)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.camera_height)
 
+    # FPS確保のため圧縮
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc("M", "J", "P", "G"))
     # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc('Y', 'U', 'Y', 'V'));
 
@@ -65,16 +82,17 @@ def main():
 
     codec = cv2.VideoWriter_fourcc("m", "p", "4", "v")
     video = cv2.VideoWriter(output_file_path, codec, CLIP_FPS, (W, H))
-    model = YOLO("./weights/yolov8s.pt")
+    model = YOLO(args.weights)
 
-    overlay_image = cv2.imread("./images/danger.png", cv2.COLOR_BGR2RGB)
+    danger_file_path = "./images/danger.png"
+    overlay_image = cv2.imread(danger_file_path, cv2.COLOR_BGR2RGB)
     overlay = cv2.resize(overlay_image, (W, H))
 
     # 滞留カウンタ
     counter = 0
     is_person = False
     # 閾値（人検知の連続フレーム数がこの値を超えたら警告）
-    person_thr = 100
+    person_thr = args.thr
 
     print("start detection")
 
@@ -148,4 +166,4 @@ def main():
 if __name__ == "__main__":
 
     args = parse_arguments()
-    main()
+    main(args)
