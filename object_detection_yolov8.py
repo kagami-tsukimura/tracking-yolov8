@@ -79,7 +79,7 @@ def main(args):
     output_dir = "./outputs"
     output_file_path = f"{output_dir}/{args.output}"
 
-    alpha = 0.9
+    alpha = 0.8
 
     # 出力先がなければ作成
     os.makedirs(output_dir, exist_ok=True)
