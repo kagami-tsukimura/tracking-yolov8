@@ -47,7 +47,7 @@ docker-compose down
 docker-compose exec <FasAPI CONTAINER ID> bash
 ```
 
-1. Create Database Migrations Environment
+2. Create Database Migrations Environment
 
 - On FastAPI Container
 
@@ -55,7 +55,7 @@ docker-compose exec <FasAPI CONTAINER ID> bash
 alembic init migrations
 ```
 
-1. Grant User Permissions
+3. Grant User Permissions
 
 - On Local
 
@@ -63,7 +63,7 @@ alembic init migrations
 sudo chown -R $(whoami):$(whoami) migrations/ alembic.ini
 ```
 
-1. Fix `alembic.ini`
+4. Fix `alembic.ini`
 
 - On Local
 
@@ -71,7 +71,7 @@ sudo chown -R $(whoami):$(whoami) migrations/ alembic.ini
 sqlalchemy.url = postgresql://postgres:postgres@postgres:5432/admin
 ```
 
-1. Fix `migrations/env.py`
+5. Fix `migrations/env.py`
 
 - On Local
 
@@ -81,7 +81,7 @@ from models import Base
 target_metadata = Base.metadata
 ```
 
-1. Run Migrations
+6. Run Migrations
 
 - On FastAPI Container
 
@@ -89,7 +89,7 @@ target_metadata = Base.metadata
 alembic revision --autogenerate -m "Create table"
 ```
 
-1. Apply Migrations
+7. Apply Migrations
 
 - On FastAPI Container
 
