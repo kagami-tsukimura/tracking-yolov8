@@ -16,4 +16,4 @@ def create_picture(db: Session, create_picture: PictureCreate):
     db.add(db_picture)
     db.commit()
 
-    return {"picture_id": db_picture.picture_id}
+    return db_picture
