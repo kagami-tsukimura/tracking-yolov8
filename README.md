@@ -6,11 +6,11 @@ This project focuses on the object detection task using the [YOLOv8](https://git
 
 1. Clone this repository to your local machine.
 2. Please install [CUDA](https://developer.nvidia.com/cuda-downloads).
-3. Set up a virtual environment and install the required dependencies using the provided `environ/requirements.txt`.
+3. Set up a virtual environment and install the required dependencies using the provided `server/environ/requirements.txt`.
 
    ```bash
    python3 -m venv yolo
-   pip install -r environ/requirements.txt
+   pip install -r server/environ/requirements.txt
    ```
 
 4. Please execute with the following code.
