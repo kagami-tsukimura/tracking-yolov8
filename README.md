@@ -109,6 +109,21 @@ Please see [Docker](./server/docker-compose.yml)
   - User: postgres
   - Password: postgres
 
+### How To Coreate Private Key
+
+1. Run `openssl`
+
+```bash:
+openssl rand -hex 32
+```
+
+2. Set `.env`
+
+```bash
+SECRET_KEY = "YOUR_SECRET_KEY"
+DATABASE_URL = "POSTGRES_DATABASE_URL"
+```
+
 ## Table Layout
 
 ![overview](plantuml/erd.svg)
