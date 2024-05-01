@@ -14,7 +14,8 @@ class AlertCreate(BaseModel):
 
 
 class AlertResponse(BaseModel):
-    picture_id: int = Field(gt=0, example=1)
+    # picture_id: int = Field(gt=0, example=1)
+    picture: str = Field(example="http://example.com/picture.jpg")
 
     model_config = ConfigDict(from_attributes=True)
 
