@@ -1,0 +1,5 @@
+@startuml erd
+!include tables.pu
+
+alerts ||-r-o| pictures
+@enduml
