@@ -1,7 +1,25 @@
 version: '3'
 
 services:
-  postgresql:
+  app:
+    build: .
+    ports:
+      - '8000:8000'
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: always
+    command:
+      [
+        'bash',
+        '-c',
+        'echo ''alias ll="ls -l"'' >> ~/.bashrc && pip install -r environ/requirements.txt && uvicorn main:app --host 0.0.0.0 --port 8000 --reload --workers 1',
+      ]
+    depends_on:
+      - postgres
+
+  postgres:
     image: postgres:16-alpine
     restart: always
     ports:
@@ -26,4 +44,4 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@example.com
       PGADMIN_DEFAULT_PASSWORD: postgres
     depends_on:
-      - postgresql
+      - postgres

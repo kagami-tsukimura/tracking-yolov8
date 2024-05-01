@@ -1,7 +1,10 @@
+docker
+.env
+migrations
+__pycache__
+
 /outputs
 /videos
 /runs
 /weights
 /yolo
-/docker
-.env
