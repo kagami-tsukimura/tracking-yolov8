@@ -23,6 +23,107 @@ This project focuses on the object detection task using the [YOLOv8](https://git
    python3 object_detection_yolov8.py --video <mp4 file path>
    ```
 
+## Docker
+
+Please see [Docker](./server/docker-compose.yml)
+
+### How To Up Docker
+
+```bash
+docker-compose up -d
+```
+
+### How To Down Docker
+
+```bash
+docker-compose down
+```
+
+### Setup Database
+
+1. Execute FastAPI Container
+
+```bash
+docker-compose exec <FasAPI CONTAINER ID> bash
+```
+
+2. Create Database Migrations Environment
+
+- On FastAPI Container
+
+```bash
+alembic init migrations
+```
+
+3. Grant User Permissions
+
+- On Local
+
+```bash
+sudo chown -R $(whoami):$(whoami) migrations/ alembic.ini
+```
+
+4. Fix `alembic.ini`
+
+- On Local
+
+```ini
+sqlalchemy.url = postgresql://postgres:postgres@postgres:5432/admin
+```
+
+5. Fix `migrations/env.py`
+
+- On Local
+
+```python
+from models import Base
+
+target_metadata = Base.metadata
+```
+
+6. Run Migrations
+
+- On FastAPI Container
+
+```bash
+alembic revision --autogenerate -m "Create table"
+```
+
+7. Apply Migrations
+
+- On FastAPI Container
+
+```bash
+alembic upgrade head
+```
+
+### Connect PgAdmin
+
+Please see [Docker](./server/docker-compose.yml)
+
+- General
+  - Name: postgres
+- Connect
+  - Host/Address: postgres
+  - Port: 5432
+  - User: postgres
+  - Password: postgres
+
+### How To Coreate Private Key
+
+1. Run `openssl`
+
+```bash:
+openssl rand -hex 32
+```
+
+2. Set `.env`
+
+```bash
+SECRET_KEY = "YOUR_SECRET_KEY"
+DATABASE_URL = "POSTGRES_DATABASE_URL"
+```
+
 ## Table Layout
 
 ![overview](plantuml/erd.svg)
