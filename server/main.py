@@ -1,10 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
-from routers import alert
+from routers import alert, picture
 
 app = FastAPI()
 
 app.include_router(alert.router)
+app.include_router(picture.router)
 
 
 @app.get("/")
