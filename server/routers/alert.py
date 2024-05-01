@@ -2,10 +2,8 @@
 # flake8: noqa: E402
 import os
 import sys
-from typing import Annotated
 
-from fastapi import APIRouter, Depends, HTTPException, Path, Query, Request
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from starlette import status
 
 parent_dir = os.path.join(os.path.dirname(__file__), "..")

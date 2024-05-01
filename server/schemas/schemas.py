@@ -25,3 +25,4 @@ class PictureCreate(BaseModel):
 
 class PictureResponse(BaseModel):
     picture_id: int = Field(gt=0, example=1)
+    picture: str = Field(example="http://example.com/picture.jpg")
