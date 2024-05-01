@@ -17,3 +17,11 @@ class AlertResponse(BaseModel):
     picture_id: int = Field(gt=0, example=1)
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class PictureCreate(BaseModel):
+    picture: str = Field(example="http://example.com/picture.jpg")
+
+
+class PictureResponse(BaseModel):
+    picture_id: int = Field(gt=0, example=1)
