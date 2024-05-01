@@ -97,6 +97,18 @@ alembic revision --autogenerate -m "Create table"
 alembic upgrade head
 ```
 
+### Connect PgAdmin
+
+Please see [Docker](./server/docker-compose.yml)
+
+- General
+  - Name: postgres
+- Connect
+  - Host/Address: postgres
+  - Port: 5432
+  - User: postgres
+  - Password: postgres
+
 ## Table Layout
 
 ![overview](plantuml/erd.svg)
