@@ -49,11 +49,15 @@ docker-compose exec <FasAPI CONTAINER ID> bash
 
 1. Create Database Migrations Environment
 
+- On FastAPI Container
+
 ```bash
 alembic init migrations
 ```
 
 1. Grant User Permissions
+
+- On Local
 
 ```bash
 sudo chown -R $(whoami):$(whoami) migrations/ alembic.ini
@@ -61,11 +65,15 @@ sudo chown -R $(whoami):$(whoami) migrations/ alembic.ini
 
 1. Fix `alembic.ini`
 
+- On Local
+
 ```ini
 sqlalchemy.url = postgresql://postgres:postgres@postgres:5432/admin
 ```
 
 1. Fix `migrations/env.py`
+
+- On Local
 
 ```python
 from models import Base
@@ -75,11 +83,15 @@ target_metadata = Base.metadata
 
 1. Run Migrations
 
+- On FastAPI Container
+
 ```bash
 alembic revision --autogenerate -m "Create table"
 ```
 
 1. Apply Migrations
+
+- On FastAPI Container
 
 ```bash
 alembic upgrade head
