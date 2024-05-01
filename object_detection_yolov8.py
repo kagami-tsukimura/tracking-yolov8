@@ -1,9 +1,18 @@
 import argparse
+import asyncio
+import json
 import os
 from datetime import datetime
+from enum import Enum
 
 import cv2
+import requests
 from ultralytics import YOLO
+
+
+class AlertStatus(Enum):
+    CAMERA = "CAMERA"
+    MP4 = "MP4"
 
 
 def print_arguments(func):
@@ -54,8 +63,47 @@ def parse_arguments():
     parser.add_argument(
         "-t", "--thr", default=100, type=int, help="Person continuous threshold"
     )
+    parser.add_argument(
+        "-u", "--url", default="http://localhost:8000", type=str, help="POST URL"
+    )
 
     return parser.parse_args()
+
+
+def post_picture(url):
+    try:
+        res = requests.post(
+            f"{url}/picture",
+            json={"picture": "http://localhost:80/image.png"},
+            timeout=10,
+        )
+        print("POST request sent successfully.")
+
+        res_picture_id = json.loads(res.text)["picture_id"]
+        # res_picture = json.loads(res.text)["picture"]
+
+        # return res_picture_id, res_picture
+        return res_picture_id
+    except Exception as e:
+        print(f"Failed to send POST picture request: {e}")
+
+
+async def post_alert(url, picture_id, status, alert_file):
+    try:
+        res = await asyncio.to_thread(
+            requests.post,
+            f"{url}/alert",
+            json={"picture_id": picture_id, "status": status},
+            timeout=10,
+        )
+        print("POST request sent successfully.")
+
+        res_picture = json.loads(res.text)["picture"]
+
+        with open(alert_file, "a") as f:
+            f.write(f"{res_picture}\n")
+    except Exception as e:
+        print(f"Failed to send POST alert request: {e}")
 
 
 def release(video, cap):
@@ -76,20 +124,23 @@ def main(args):
     MEDIUM = 2
     LARGE = 4
 
+    alert_dir = "./alerts"
     output_dir = "./outputs"
     output_file_path = f"{output_dir}/{args.output}"
 
-    alpha = 0.8
-
     # 出力先がなければ作成
+    os.makedirs(alert_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
 
     if args.video:
         cap = cv2.VideoCapture(args.video)
         alpha = 0.99
+        alert_status = AlertStatus.MP4.value
     else:
         # カメラの読み込み
         cap = cv2.VideoCapture(0)
+        alpha = 0.8
+        alert_status = AlertStatus.CAMERA.value
     # camera_width*camera_height にリサイズ
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.camera_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.camera_height)
@@ -115,6 +166,9 @@ def main(args):
     is_person = False
     # 閾値（人検知の連続フレーム数がこの値を超えたら警告）
     person_thr = args.thr
+
+    # アラート（一度きり）
+    is_before_alert = True
 
     print("start detection")
 
@@ -160,6 +214,34 @@ def main(args):
                         frame = cv2.addWeighted(
                             src1=frame, alpha=alpha, src2=overlay, beta=0.3, gamma=0
                         )
+                        # 並列処理でpost送信
+                        if is_before_alert:
+                            is_before_alert = False
+                            print("ALERT!!")
+
+                            # with ThreadPoolExecutor() as executor:
+                            # picture_id = executor.submit(send_post, args.url)
+                            # picture_id, picture = post_picture(args.url)
+                            picture_id = post_picture(args.url)
+                            # with ThreadPoolExecutor() as executor:
+                            # picture_id = executor.submit(send_post, args.url)
+                            loop = asyncio.get_event_loop()
+                            loop.run_until_complete(
+                                post_alert(
+                                    args.url,
+                                    picture_id,
+                                    alert_status,
+                                    f"{alert_dir}/alert.txt",
+                                )
+                            )
+                            # executor.submit(
+                            #     post_alert,
+                            #     args.url,
+                            #     picture_id,
+                            #     alert_status,
+                            #     f"{alert_dir}/alert.txt",
+                            # )
+
                 else:
                     cv2.putText(
                         frame,
