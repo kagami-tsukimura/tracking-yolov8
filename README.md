@@ -22,3 +22,7 @@ This project focuses on the object detection task using the [YOLOv8](https://git
    ```bash: Detection for Video
    python3 object_detection_yolov8.py --video <mp4 file path>
    ```
+
+## Table Layout
+
+![overview](plantuml/erd.svg)
