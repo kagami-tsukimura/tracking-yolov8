@@ -3,7 +3,7 @@
 import os
 import sys
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Path
 from starlette import status
 
 parent_dir = os.path.join(os.path.dirname(__file__), "..")
@@ -17,6 +17,13 @@ dependencies = Dependencies()
 DBDependency = dependencies.get_db_dependency()
 
 router = APIRouter(prefix="/picture", tags=["picture"])
+
+
+@router.get(
+    "/{picture_id}", response_model=PictureResponse, status_code=status.HTTP_200_OK
+)
+async def find_by_id(db: DBDependency, picture_id: int = Path(gt=0)):
+    return picture_cruds.find_by_id(db, picture_id)
 
 
 @router.post("", response_model=PictureResponse, status_code=status.HTTP_201_CREATED)
