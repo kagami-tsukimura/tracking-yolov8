@@ -80,9 +80,7 @@ def post_picture(url):
         print("POST request sent successfully.")
 
         res_picture_id = json.loads(res.text)["picture_id"]
-        # res_picture = json.loads(res.text)["picture"]
 
-        # return res_picture_id, res_picture
         return res_picture_id
     except Exception as e:
         print(f"Failed to send POST picture request: {e}")
@@ -219,13 +217,10 @@ def main(args):
                             is_before_alert = False
                             print("ALERT!!")
 
-                            # with ThreadPoolExecutor() as executor:
-                            # picture_id = executor.submit(send_post, args.url)
-                            # picture_id, picture = post_picture(args.url)
+                            # picture post
                             picture_id = post_picture(args.url)
-                            # with ThreadPoolExecutor() as executor:
-                            # picture_id = executor.submit(send_post, args.url)
                             loop = asyncio.get_event_loop()
+                            # alert post
                             loop.run_until_complete(
                                 post_alert(
                                     args.url,
@@ -234,13 +229,6 @@ def main(args):
                                     f"{alert_dir}/alert.txt",
                                 )
                             )
-                            # executor.submit(
-                            #     post_alert,
-                            #     args.url,
-                            #     picture_id,
-                            #     alert_status,
-                            #     f"{alert_dir}/alert.txt",
-                            # )
 
                 else:
                     cv2.putText(
