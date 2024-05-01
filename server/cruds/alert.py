@@ -1,9 +1,7 @@
 # flake8: noqa: E402
 import os
 import sys
-from typing import List
 
-from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 parent_dir = os.path.join(os.path.dirname(__file__), "..")
