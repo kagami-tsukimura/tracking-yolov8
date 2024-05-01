@@ -1,4 +1,3 @@
-from datetime import datetime
 from enum import Enum
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -10,15 +9,11 @@ class AlertStatus(Enum):
 
 
 class AlertCreate(BaseModel):
-    picture_id: int = Field(example=[1])
-    status: AlertStatus = Field(example=[AlertStatus.CAMERA])
+    picture_id: int = Field(example=1)
+    status: AlertStatus = Field(example=AlertStatus.CAMERA)
 
 
 class AlertResponse(BaseModel):
-    alert_id: int = Field(gt=0, example=[1])
-    picture_id: int = Field(gt=0, example=[1])
-    status: AlertStatus = Field(example=[AlertStatus.CAMERA])
-    created_at: datetime
-    updated_at: datetime
+    picture_id: int = Field(gt=0, example=1)
 
     model_config = ConfigDict(from_attributes=True)

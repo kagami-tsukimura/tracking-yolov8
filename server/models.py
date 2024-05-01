@@ -1,5 +1,6 @@
 from database.database import Base
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String
+from schemas.schemas import AlertStatus
+from sqlalchemy import Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.sql.functions import current_timestamp
 
 
@@ -10,6 +11,7 @@ class Alert(Base):
     picture_id = Column(
         Integer, ForeignKey("pictures.picture_id", ondelete="CASCADE"), nullable=False
     )
+    status = Column(Enum(AlertStatus), nullable=False)
     created_at = Column(String, default=current_timestamp())
     updated_at = Column(
         DateTime, default=current_timestamp(), onupdate=current_timestamp()
