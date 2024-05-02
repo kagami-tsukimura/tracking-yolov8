@@ -229,6 +229,12 @@ def main(args):
                                     f"{alert_dir}/alert.txt",
                                 )
                             )
+                            # nginxに画像保存
+                            now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
+                            cv2.imwrite(
+                                f"server/docker/nginx/images/{now}_person_keikoku.png",
+                                frame,
+                            )
 
                 else:
                     cv2.putText(
