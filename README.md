@@ -9,6 +9,8 @@ The alert of a person who has stayed continuously for a constant frame is issued
 
 ### Setup Virtual Environment
 
+<details><summary>[How To Setup Virtual Environment]</summary>
+
 1. Clone this repository to your local machine.
 2. Please install [CUDA](https://developer.nvidia.com/cuda-downloads).
 3. Set up a virtual environment and install the required dependencies using the provided `server/environ/requirements.txt`.
@@ -18,7 +20,11 @@ The alert of a person who has stayed continuously for a constant frame is issued
    pip install -r server/environ/requirements.txt
    ```
 
+</details>
+
 ### Setup Docker
+
+<details><summary>[How To Setup Docker]</summary>
 
 Please see [Docker](./server/docker-compose.yml)
 
@@ -126,19 +132,27 @@ Please see [Docker](./server/docker-compose.yml)
 docker-compose down
 ```
 
+</details>
+
 ### Run the Object Detection
 
-4. Please execute with the following code.
+<details><summary>[How To Run the Object Detection]</summary>
 
-   ```bash: Detection for Camera
-   python3 object_detection_yolov8.py
-   ```
+Please execute with the following code.
 
-   ```bash: Detection for Video
-   python3 object_detection_yolov8.py --video <mp4 file path>
-   ```
+```bash: Detection for Camera
+python3 object_detection_yolov8.py
+```
+
+```bash: Detection for Video
+python3 object_detection_yolov8.py --video <mp4 file path>
+```
+
+</details>
 
 ### Download Alert Files
+
+<details><summary>[How To Download Alert Files]</summary>
 
 The alert images are saved in nginx and can be downloaded.
 
@@ -148,6 +162,8 @@ cd alerts
 # sample command
 ./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
 ```
+
+</details>
 
 ## Table Layout
 
