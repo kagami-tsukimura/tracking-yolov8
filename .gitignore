@@ -9,3 +9,4 @@ __pycache__
 /yolo
 /alerts
 /server/docker/nginx/images
+/server/docker/postgresql
