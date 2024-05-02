@@ -8,5 +8,7 @@ __pycache__
 /weights
 /yolo
 /alerts
-/server/docker/nginx/images
 /server/docker/postgresql
+
+/server/docker/nginx/images/*
+!/server/docker/nginx/images/.gitkeep
