@@ -20,20 +20,6 @@ The alert of a person who has stayed continuously for a constant frame is issued
 
 ### Setup Docker
 
-### Run the Object Detection
-
-4. Please execute with the following code.
-
-   ```bash: Detection for Camera
-   python3 object_detection_yolov8.py
-   ```
-
-   ```bash: Detection for Video
-   python3 object_detection_yolov8.py --video <mp4 file path>
-   ```
-
-## Docker
-
 Please see [Docker](./server/docker-compose.yml)
 
 Launch the following containers with Docker.
@@ -43,19 +29,28 @@ Launch the following containers with Docker.
 - PgAdmin
 - Nginx
 
-### How To Up Docker
+#### How To Up Docker
 
 ```bash
 docker-compose up -d
 ```
 
-### How To Down Docker
+#### Memo: How To Coreate Private Key
 
-```bash
-docker-compose down
+1. Run `openssl`
+
+```bash:
+openssl rand -hex 32
 ```
 
-### Setup Database
+2. Set `.env`
+
+```bash
+SECRET_KEY = "YOUR_SECRET_KEY"
+DATABASE_URL = "POSTGRES_DATABASE_URL"
+```
+
+#### Setup Database
 
 1. Execute FastAPI Container
 
@@ -113,7 +108,7 @@ alembic revision --autogenerate -m "Create table"
 alembic upgrade head
 ```
 
-### Connect PgAdmin
+#### Connect PgAdmin
 
 Please see [Docker](./server/docker-compose.yml)
 
@@ -125,19 +120,33 @@ Please see [Docker](./server/docker-compose.yml)
   - User: postgres
   - Password: postgres
 
-### How To Coreate Private Key
-
-1. Run `openssl`
-
-```bash:
-openssl rand -hex 32
-```
-
-2. Set `.env`
+#### How To Down Docker
 
 ```bash
-SECRET_KEY = "YOUR_SECRET_KEY"
-DATABASE_URL = "POSTGRES_DATABASE_URL"
+docker-compose down
+```
+
+### Run the Object Detection
+
+4. Please execute with the following code.
+
+   ```bash: Detection for Camera
+   python3 object_detection_yolov8.py
+   ```
+
+   ```bash: Detection for Video
+   python3 object_detection_yolov8.py --video <mp4 file path>
+   ```
+
+### Download Alert Files
+
+The alert images are saved in nginx and can be downloaded.
+
+```bash
+cd alerts
+./downloads.sh <alert_file_path>
+# sample command
+./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
 ```
 
 ## Table Layout
