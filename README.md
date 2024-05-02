@@ -2,6 +2,22 @@
 
 This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.
 
+"""メモ途中
+
+Docker で以下のコンテナを立ち上げ、物体検知で一定フレーム連続で滞留した人のアラートを発報します。
+
+アラートの画像は nginx に保存され、ダウンロードも可能です。
+
+```bash
+cd alerts
+./downloads.sh <alert_file_path>
+
+# sample command
+./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
+```
+
+"""
+
 ## How to Use
 
 1. Clone this repository to your local machine.
