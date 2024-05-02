@@ -13,6 +13,17 @@ from schemas.schemas import AlertCreate
 
 
 def create_alert(db: Session, create_alert: AlertCreate):
+    """
+    Creates an alert in the database using the provided session and alert data.
+
+    Args:
+        db (Session): The database session object.
+        create_alert (AlertCreate): The alert data to create.
+
+    Returns:
+        PictureResponse: The response containing the picture.
+    """
+
     db_alert = Alert(**create_alert.model_dump())
     db.add(db_alert)
     db.commit()

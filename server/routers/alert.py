@@ -21,4 +21,15 @@ router = APIRouter(prefix="/alert", tags=["alert"])
 
 @router.post("", response_model=AlertResponse, status_code=status.HTTP_201_CREATED)
 async def create_alert(db: DBDependency, create_alert: AlertCreate):
+    """
+    Create an alert.
+
+    Parameters:
+        - db: The database dependency.
+        - create_alert: The alert data to create.
+
+    Returns:
+        AlertResponse(picture url).
+    """
+
     return alert_cruds.create_alert(db, create_alert)
