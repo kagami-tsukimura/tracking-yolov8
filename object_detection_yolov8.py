@@ -215,6 +215,7 @@ def release(video, cap):
     """
     # videoの書き込み/読み込み終了
     print("end detection")
+    logging.info("end detection")
     video.release()
     cap.release()
     cv2.destroyAllWindows()
