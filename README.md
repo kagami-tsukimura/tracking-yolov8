@@ -140,11 +140,15 @@ docker-compose down
 
 Please execute with the following code.
 
-```bash: Detection for Camera
+- Detection for Camera
+
+```bash
 python3 object_detection_yolov8.py
 ```
 
-```bash: Detection for Video
+- Detection for Video
+
+```bash
 python3 object_detection_yolov8.py --video <mp4 file path>
 ```
 
