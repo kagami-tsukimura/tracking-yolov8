@@ -1,4 +1,3 @@
-docker
 .env
 migrations
 __pycache__
@@ -9,3 +8,5 @@ __pycache__
 /weights
 /yolo
 /alerts
+/server/docker/nginx/images
+/server/docker/postgresql
