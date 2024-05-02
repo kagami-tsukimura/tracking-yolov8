@@ -2,10 +2,11 @@
 
 # Download nginx images
 download() {
-    if [ ! -d downloads ]; then
-        mkdir downloads
+    if [ ! -d images ]; then
+        mkdir images
     fi
-    curl -o downloads/`basename $1` $1
+    curl -o images/`basename $1` $1
+    echo "images/`basename $1`をダウンロードしました!"
 }
 
 main() {
