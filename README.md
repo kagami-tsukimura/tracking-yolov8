@@ -1,8 +1,15 @@
 # Object Detection with YOLOv8
 
-This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.
+## Overview
+
+This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.  
+The alert of a person who has stayed continuously for a constant frame is issued by object detection.
 
 ## How to Use
+
+### Setup Virtual Environment
+
+<details><summary>[How To Setup Virtual Environment]</summary>
 
 1. Clone this repository to your local machine.
 2. Please install [CUDA](https://developer.nvidia.com/cuda-downloads).
@@ -13,33 +20,43 @@ This project focuses on the object detection task using the [YOLOv8](https://git
    pip install -r server/environ/requirements.txt
    ```
 
-4. Please execute with the following code.
+</details>
 
-   ```bash: Detection for Camera
-   python3 object_detection_yolov8.py
-   ```
+### Setup Docker
 
-   ```bash: Detection for Video
-   python3 object_detection_yolov8.py --video <mp4 file path>
-   ```
-
-## Docker
+<details><summary>[How To Setup Docker]</summary>
 
 Please see [Docker](./server/docker-compose.yml)
 
-### How To Up Docker
+Launch the following containers with Docker.
+
+- FastAPI
+- PostgreSQL
+- PgAdmin
+- Nginx
+
+#### How To Up Docker
 
 ```bash
 docker-compose up -d
 ```
 
-### How To Down Docker
+#### Memo: How To Coreate Private Key
 
-```bash
-docker-compose down
+1. Run `openssl`
+
+```bash:
+openssl rand -hex 32
 ```
 
-### Setup Database
+2. Set `.env`
+
+```bash
+SECRET_KEY = "YOUR_SECRET_KEY"
+DATABASE_URL = "POSTGRES_DATABASE_URL"
+```
+
+#### Setup Database
 
 1. Execute FastAPI Container
 
@@ -97,7 +114,7 @@ alembic revision --autogenerate -m "Create table"
 alembic upgrade head
 ```
 
-### Connect PgAdmin
+#### Connect PgAdmin
 
 Please see [Docker](./server/docker-compose.yml)
 
@@ -109,20 +126,44 @@ Please see [Docker](./server/docker-compose.yml)
   - User: postgres
   - Password: postgres
 
-### How To Coreate Private Key
-
-1. Run `openssl`
-
-```bash:
-openssl rand -hex 32
-```
-
-2. Set `.env`
+#### How To Down Docker
 
 ```bash
-SECRET_KEY = "YOUR_SECRET_KEY"
-DATABASE_URL = "POSTGRES_DATABASE_URL"
+docker-compose down
 ```
+
+</details>
+
+### Run the Object Detection
+
+<details><summary>[How To Run the Object Detection]</summary>
+
+Please execute with the following code.
+
+```bash: Detection for Camera
+python3 object_detection_yolov8.py
+```
+
+```bash: Detection for Video
+python3 object_detection_yolov8.py --video <mp4 file path>
+```
+
+</details>
+
+### Download Alert Files
+
+<details><summary>[How To Download Alert Files]</summary>
+
+The alert images are saved in nginx and can be downloaded.
+
+```bash
+cd alerts
+./downloads.sh <alert_file_path>
+# sample command
+./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
+```
+
+</details>
 
 ## Table Layout
 
