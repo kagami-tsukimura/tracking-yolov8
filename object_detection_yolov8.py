@@ -103,6 +103,20 @@ def parse_arguments():
 
 
 def post_picture(url, alert_image_path):
+    """
+    Sends a POST request to the specified URL with the provided alert image path.
+
+    Args:
+        url (str): The URL to send the POST request to.
+        alert_image_path (str): The path to the alert image.
+
+    Returns:
+        The ID of the picture received from the POST request.
+
+    Raises:
+        Exception: If the POST request fails.
+    """
+
     try:
         res = requests.post(
             f"{url}/picture",
