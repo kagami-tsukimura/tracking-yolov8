@@ -8,3 +8,4 @@ __pycache__
 /weights
 /yolo
 /alerts
+/server/docker/nginx/images
