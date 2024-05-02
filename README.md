@@ -5,19 +5,9 @@
 This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.  
 The alert of a person who has stayed continuously for a constant frame is issued by object detection.
 
-アラートの画像は nginx に保存され、ダウンロードも可能です。
-
-```bash
-cd alerts
-./downloads.sh <alert_file_path>
-
-# sample command
-./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
-```
-
-"""
-
 ## How to Use
+
+### Setup Virtul Environment
 
 1. Clone this repository to your local machine.
 2. Please install [CUDA](https://developer.nvidia.com/cuda-downloads).
@@ -27,6 +17,10 @@ cd alerts
    python3 -m venv yolo
    pip install -r server/environ/requirements.txt
    ```
+
+### Setup Docker
+
+### Run the Object Detection
 
 4. Please execute with the following code.
 
