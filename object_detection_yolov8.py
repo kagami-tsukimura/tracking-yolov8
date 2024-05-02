@@ -220,7 +220,7 @@ def main(args):
                             is_before_alert = False
                             now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
                             alert_file = f"{now}_person_keikoku.png"
-                            alert_image_path_nginx = f"{args.nginx}/images/{alert_file}"
+                            alert_image_path_nginx = f"{args.nginx}/{alert_file}"
                             alert_image_path_local = (
                                 f"server/docker/nginx/images/{alert_file}"
                             )
