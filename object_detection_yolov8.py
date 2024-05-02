@@ -159,6 +159,7 @@ def post_picture(url, alert_image_path):
         print("POST request sent successfully.")
 
         res_picture_id = json.loads(res.text)["picture_id"]
+        logging.info("Alert image link: {alert_image_path}")
 
         return res_picture_id
     except Exception as e:
