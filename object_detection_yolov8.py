@@ -58,8 +58,8 @@ def parse_arguments():
     Raises:
         SystemExit: If an error occurs while parsing the command line arguments.
     """
-    now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
 
+    now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
     parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
 
     parser.add_argument(
@@ -119,6 +119,22 @@ def post_picture(url, alert_image_path):
 
 
 async def post_alert(url, picture_id, status, alert_file):
+    """
+    Async sends a POST request to the specified URL with the given picture ID, status, and alert file.
+
+    Args:
+        url (str): The URL to send the POST request to.
+        picture_id (int): The ID of the picture.
+        status (str): The status of the alert.
+        alert_file (str): The path to the alert file.
+
+    Returns:
+        None
+
+    Raises:
+        Exception: If the POST request fails to send.
+    """
+
     try:
         res = await asyncio.to_thread(
             requests.post,
