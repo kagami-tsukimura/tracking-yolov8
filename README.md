@@ -5,15 +5,6 @@
 This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.  
 The alert of a person who has stayed continuously for a constant frame is issued by object detection.
 
-"""メモ途中
-
-Launch the following containers with Docker.
-
-- FastAPI
-- PostgreSQL
-- PgAdmin
-- Nginx
-
 アラートの画像は nginx に保存され、ダウンロードも可能です。
 
 ```bash
@@ -50,6 +41,13 @@ cd alerts
 ## Docker
 
 Please see [Docker](./server/docker-compose.yml)
+
+Launch the following containers with Docker.
+
+- FastAPI
+- PostgreSQL
+- PgAdmin
+- Nginx
 
 ### How To Up Docker
 
