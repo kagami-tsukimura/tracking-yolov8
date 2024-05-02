@@ -16,7 +16,27 @@ class AlertStatus(Enum):
 
 
 def print_arguments(func):
+    """
+    A decorator function that wraps another function and prints the arguments and their values before calling the original function.
+
+    Parameters:
+        func (callable): The original function to be wrapped.
+
+    Returns:
+        callable: The wrapper function that prints the arguments and their values before calling the original function.
+    """
+
     def wrapper(*args, **kwargs):
+        """
+        A wrapper function that prints the arguments and their values before calling the original function.
+
+        Args:
+            *args: Variable length argument list.
+            **kwargs: Arbitrary keyword arguments.
+
+        Returns:
+            The result of the original function.
+        """
         result = func(*args, **kwargs)
         print("arguments------")
         for key, value in vars(result).items():
@@ -29,6 +49,15 @@ def print_arguments(func):
 
 @print_arguments
 def parse_arguments():
+    """
+    Parse the command line arguments for object detection with camera_yolov8.
+
+    Returns:
+        argparse.Namespace: The parsed command line arguments.
+
+    Raises:
+        SystemExit: If an error occurs while parsing the command line arguments.
+    """
     now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
 
     parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
@@ -108,6 +137,16 @@ async def post_alert(url, picture_id, status, alert_file):
 
 
 def release(video, cap):
+    """
+    Release the video and camera resources.
+
+    Args:
+        video (cv2.VideoWriter): The video writer object.
+        cap (cv2.VideoCapture): The video capture object.
+
+    Returns:
+        None
+    """
     # videoの書き込み/読み込み終了
     print("end detection")
     video.release()
@@ -116,6 +155,31 @@ def release(video, cap):
 
 
 def main(args):
+    """
+    The main function that performs object detection using YOLOv8 and displays the results in a video stream.
+
+    Parameters:
+    - args: A dictionary containing the command line arguments passed to the function.
+        - video: The path to the video file to be processed.
+        - weights: The path to the YOLOv8 weights file.
+        - output: The name of the output video file.
+        - camera_width: The width of the camera frame.
+        - camera_height: The height of the camera frame.
+        - thr: The threshold for detecting people.
+
+    Returns:
+    - None
+
+    This function performs the following steps:
+    1. Sets up the necessary directories and files.
+    2. Reads the video file or initializes the camera stream.
+    3. Sets the frame size and FPS of the video.
+    4. Initializes the YOLOv8 model.
+    5. Loads the overlay image for the alert.
+    6. Enters the detection loop, which continues until the video is finished or the user presses a key.
+    7. Reads a frame from the video.
+    """
+
     # 定数
     PERSON = "person"
     BLUE = (255, 0, 0)
