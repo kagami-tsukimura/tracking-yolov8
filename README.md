@@ -7,7 +7,7 @@ The alert of a person who has stayed continuously for a constant frame is issued
 
 ## How to Use
 
-### Setup Virtul Environment
+### Setup Virtual Environment
 
 1. Clone this repository to your local machine.
 2. Please install [CUDA](https://developer.nvidia.com/cuda-downloads).
