@@ -163,6 +163,7 @@ def post_picture(url, alert_image_path):
         return res_picture_id
     except Exception as e:
         print(f"Failed to send POST picture request: {e}")
+        logging.error(f"Failed to send POST picture request: {e}")
 
 
 async def post_alert(url, picture_id, status, alert_file):
@@ -197,6 +198,7 @@ async def post_alert(url, picture_id, status, alert_file):
             f.write(f"{res_picture}\n")
     except Exception as e:
         print(f"Failed to send POST alert request: {e}")
+        logging.error(f"Failed to send POST alert request: {e}")
 
 
 def release(video, cap):
@@ -303,6 +305,7 @@ def main(args):
     is_before_alert = True
 
     print("start detection")
+    logging.info("start detection")
 
     # キーが押されるまで
     while cap.isOpened():
@@ -356,6 +359,7 @@ def main(args):
                                 f"server/docker/nginx/images/{alert_file}"
                             )
                             print("ALERT!!")
+                            logging.info("ALERT!!")
 
                             # picture post
                             picture_id = post_picture(args.url, alert_image_path_nginx)
@@ -401,6 +405,7 @@ def main(args):
             key = cv2.waitKey(1)
             if key != -1:
                 print("STOP PLAY!!!")
+                logging.warning("STOP PLAY!!!")
                 break
 
     release(video, cap)
