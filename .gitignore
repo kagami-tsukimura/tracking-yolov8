@@ -1,4 +1,3 @@
-docker
 .env
 migrations
 __pycache__
