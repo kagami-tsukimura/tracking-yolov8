@@ -1,10 +1,18 @@
 # Object Detection with YOLOv8
 
-This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.
+## Overview
+
+This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.  
+The alert of a person who has stayed continuously for a constant frame is issued by object detection.
 
 """メモ途中
 
-Docker で以下のコンテナを立ち上げ、物体検知で一定フレーム連続で滞留した人のアラートを発報します。
+Launch the following containers with Docker.
+
+- FastAPI
+- PostgreSQL
+- PgAdmin
+- Nginx
 
 アラートの画像は nginx に保存され、ダウンロードも可能です。
 
