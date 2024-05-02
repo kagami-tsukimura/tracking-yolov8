@@ -45,3 +45,13 @@ services:
       PGADMIN_DEFAULT_PASSWORD: postgres
     depends_on:
       - postgres
+
+  nginx:
+    image: nginx
+    ports:
+      - 8001:80
+    volumes:
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d
+      - ./docker/nginx/images:/home/images
+    depends_on:
+      - app
