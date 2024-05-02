@@ -66,15 +66,18 @@ def parse_arguments():
     parser.add_argument(
         "-u", "--url", default="http://localhost:8000", type=str, help="POST URL"
     )
+    parser.add_argument(
+        "-n", "--nginx", default="http://localhost:8001", type=str, help="Nginx URL"
+    )
 
     return parser.parse_args()
 
 
-def post_picture(url):
+def post_picture(url, alert_image_path):
     try:
         res = requests.post(
             f"{url}/picture",
-            json={"picture": "http://localhost:80/image.png"},
+            json={"picture": alert_image_path},
             timeout=10,
         )
         print("POST request sent successfully.")
@@ -215,10 +218,16 @@ def main(args):
                         # 並列処理でpost送信
                         if is_before_alert:
                             is_before_alert = False
+                            now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
+                            alert_file = f"{now}_person_keikoku.png"
+                            alert_image_path_nginx = f"{args.nginx}/{alert_file}"
+                            alert_image_path_local = (
+                                f"server/docker/nginx/images/{alert_file}"
+                            )
                             print("ALERT!!")
 
                             # picture post
-                            picture_id = post_picture(args.url)
+                            picture_id = post_picture(args.url, alert_image_path_nginx)
                             loop = asyncio.get_event_loop()
                             # alert post
                             loop.run_until_complete(
@@ -230,9 +239,8 @@ def main(args):
                                 )
                             )
                             # nginxに画像保存
-                            now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
                             cv2.imwrite(
-                                f"server/docker/nginx/images/{now}_person_keikoku.png",
+                                alert_image_path_local,
                                 frame,
                             )
 
