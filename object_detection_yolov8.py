@@ -156,7 +156,7 @@ def post_picture(url, alert_image_path):
             json={"picture": alert_image_path},
             timeout=10,
         )
-        print("POST request sent successfully.")
+        print("POST request send successfully.")
 
         res_picture_id = json.loads(res.text)["picture_id"]
         logging.info(f"Alert image link: {alert_image_path}")
@@ -191,7 +191,7 @@ async def post_alert(url, picture_id, status, alert_file):
             json={"picture_id": picture_id, "status": status},
             timeout=10,
         )
-        print("POST request sent successfully.")
+        print("POST request send successfully.")
 
         res_picture = json.loads(res.text)["picture"]
 
