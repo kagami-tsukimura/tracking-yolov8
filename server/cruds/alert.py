@@ -21,7 +21,7 @@ def create_alert(db: Session, create_alert: AlertCreate):
         create_alert (AlertCreate): The alert data to create.
 
     Returns:
-        PictureResponse: The response containing the picture url.
+        PictureResponse: The response containing the picture.
     """
 
     db_alert = Alert(**create_alert.model_dump())
