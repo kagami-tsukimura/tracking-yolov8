@@ -2,6 +2,7 @@
 migrations
 __pycache__
 
+/logs
 /outputs
 /videos
 /runs
