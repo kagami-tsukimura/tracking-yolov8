@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import json
+import logging
 import os
 from datetime import datetime
 from enum import Enum
@@ -37,12 +38,38 @@ def print_arguments(func):
         Returns:
             The result of the original function.
         """
+
+        setting_logger()
         result = func(*args, **kwargs)
         print("arguments------")
         for key, value in vars(result).items():
             print(f"{key}: {value}")
         print("------arguments")
         return result
+
+    def setting_logger():
+        """
+        Sets up the logger for the application.
+
+        This function creates a directory named "logs" if it doesn't already exist and configures.
+        Logging module to write logs to a file named "logger.log" inside the "logs" directory.
+        Log level is set to INFO, and the log message format includes the timestamp, log level, and the log message itself.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
+        LOG_DIR = "./logs"
+        os.makedirs(LOG_DIR, exist_ok=True)
+        logging.basicConfig(
+            filename=f"{LOG_DIR}/logger.log",
+            level=logging.INFO,
+            format="{asctime} [{levelname:.4}] {message}",
+            style="{",
+        )
+        logging.info("start detection")
 
     return wrapper
 
@@ -59,45 +86,51 @@ def parse_arguments():
         SystemExit: If an error occurs while parsing the command line arguments.
     """
 
-    now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
-    parser = argparse.ArgumentParser(description="Object detection with camera_yolov8")
+    try:
+        now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
+        parser = argparse.ArgumentParser(
+            description="Object detection with camera_yolov8"
+        )
 
-    parser.add_argument(
-        "-v",
-        "--video",
-        default="",
-        type=str,
-        help="Input file path",
-    )
-    parser.add_argument(
-        "-o",
-        "--output",
-        default=f"{now}_tracking.mp4",
-        type=str,
-        help="Output file path",
-    )
-    parser.add_argument(
-        "-cw", "--camera_width", default=1280, type=int, help="Sizes camera width"
-    )
-    parser.add_argument(
-        "-ch", "--camera_height", default=720, type=int, help="Sizes camera height"
-    )
-    parser.add_argument(
-        "-w",
-        "--weights",
-        default="./weights/yolov8s.pt",
-        type=str,
-        help="File path of object detection model",
-    )
-    parser.add_argument(
-        "-t", "--thr", default=100, type=int, help="Person continuous threshold"
-    )
-    parser.add_argument(
-        "-u", "--url", default="http://localhost:8000", type=str, help="POST URL"
-    )
-    parser.add_argument(
-        "-n", "--nginx", default="http://localhost:8001", type=str, help="Nginx URL"
-    )
+        parser.add_argument(
+            "-v",
+            "--video",
+            default="",
+            type=str,
+            help="Input file path",
+        )
+        parser.add_argument(
+            "-o",
+            "--output",
+            default=f"{now}_tracking.mp4",
+            type=str,
+            help="Output file path",
+        )
+        parser.add_argument(
+            "-cw", "--camera_width", default=1280, type=int, help="Sizes camera width"
+        )
+        parser.add_argument(
+            "-ch", "--camera_height", default=720, type=int, help="Sizes camera height"
+        )
+        parser.add_argument(
+            "-w",
+            "--weights",
+            default="./weights/yolov8s.pt",
+            type=str,
+            help="File path of object detection model",
+        )
+        parser.add_argument(
+            "-t", "--thr", default=100, type=int, help="Person continuous threshold"
+        )
+        parser.add_argument(
+            "-u", "--url", default="http://localhost:8000", type=str, help="POST URL"
+        )
+        parser.add_argument(
+            "-n", "--nginx", default="http://localhost:8001", type=str, help="Nginx URL"
+        )
+    except Exception as e:
+        logging.error(f"Failed to parse arguments: {e}")
+        raise SystemExit
 
     return parser.parse_args()
 
@@ -123,13 +156,15 @@ def post_picture(url, alert_image_path):
             json={"picture": alert_image_path},
             timeout=10,
         )
-        print("POST request sent successfully.")
+        print("POST request send successfully.")
 
         res_picture_id = json.loads(res.text)["picture_id"]
+        logging.info(f"Alert image link: {alert_image_path}")
 
         return res_picture_id
     except Exception as e:
         print(f"Failed to send POST picture request: {e}")
+        logging.error(f"Failed to send POST picture request: {e}")
 
 
 async def post_alert(url, picture_id, status, alert_file):
@@ -156,7 +191,7 @@ async def post_alert(url, picture_id, status, alert_file):
             json={"picture_id": picture_id, "status": status},
             timeout=10,
         )
-        print("POST request sent successfully.")
+        print("POST request send successfully.")
 
         res_picture = json.loads(res.text)["picture"]
 
@@ -164,6 +199,7 @@ async def post_alert(url, picture_id, status, alert_file):
             f.write(f"{res_picture}\n")
     except Exception as e:
         print(f"Failed to send POST alert request: {e}")
+        logging.error(f"Failed to send POST alert request: {e}")
 
 
 def release(video, cap):
@@ -179,6 +215,7 @@ def release(video, cap):
     """
     # videoの書き込み/読み込み終了
     print("end detection")
+    logging.info("end detection")
     video.release()
     cap.release()
     cv2.destroyAllWindows()
@@ -227,15 +264,19 @@ def main(args):
     os.makedirs(alert_dir, exist_ok=True)
     os.makedirs(output_dir, exist_ok=True)
 
-    if args.video:
-        cap = cv2.VideoCapture(args.video)
-        alpha = 0.99
-        alert_status = AlertStatus.MP4.value
-    else:
-        # カメラの読み込み
-        cap = cv2.VideoCapture(0)
-        alpha = 0.8
-        alert_status = AlertStatus.CAMERA.value
+    try:
+        if args.video:
+            cap = cv2.VideoCapture(args.video)
+            alpha = 0.99
+            alert_status = AlertStatus.MP4.value
+        else:
+            # カメラの読み込み
+            cap = cv2.VideoCapture(0)
+            alpha = 0.8
+            alert_status = AlertStatus.CAMERA.value
+    except Exception as e:
+        logging.error(f"Failed to video capture: {e}")
+
     # camera_width*camera_height にリサイズ
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, args.camera_width)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, args.camera_height)
@@ -266,6 +307,7 @@ def main(args):
     is_before_alert = True
 
     print("start detection")
+    logging.info("start detection")
 
     # キーが押されるまで
     while cap.isOpened():
@@ -313,12 +355,13 @@ def main(args):
                         if is_before_alert:
                             is_before_alert = False
                             now = datetime.now().strftime("%Y%m%d_%Hh%Mm%Ss")
-                            alert_file = f"{now}_person_keikoku.png"
+                            alert_file = f"{now}_person_alert.png"
                             alert_image_path_nginx = f"{args.nginx}/{alert_file}"
                             alert_image_path_local = (
                                 f"server/docker/nginx/images/{alert_file}"
                             )
                             print("ALERT!!")
+                            logging.info("ALERT!!")
 
                             # picture post
                             picture_id = post_picture(args.url, alert_image_path_nginx)
@@ -364,6 +407,7 @@ def main(args):
             key = cv2.waitKey(1)
             if key != -1:
                 print("STOP PLAY!!!")
+                logging.warning("STOP PLAY!!!")
                 break
 
     release(video, cap)
