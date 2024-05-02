@@ -164,7 +164,7 @@ The alert images are saved in nginx and can be downloaded.
 cd alerts
 ./downloads.sh <alert_file_path>
 # sample command
-./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_keikoku.png
+./downloads.sh http://localhost:8001/images/20240502_11h35m37s_person_alert.png
 ```
 
 </details>
