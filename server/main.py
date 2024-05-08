@@ -1,5 +1,10 @@
+import asyncio
+import time
+from concurrent.futures import ThreadPoolExecutor
+from typing import List
+
 import uvicorn
-from fastapi import FastAPI
+from fastapi import FastAPI, Query
 from routers import alert, picture
 
 app = FastAPI()
@@ -17,6 +22,22 @@ async def root():
         dict: A dictionary containing the message "Hello World".
     """
     return {"message": "Hello World"}
+
+
+@app.post("/single_thread")
+async def single_thread(numbers: List[int] = Query(default=[])):
+
+    print(numbers)
+    start = time.time()
+
+    for _ in numbers:
+        three_sleep()
+
+    return {"elapsed_time": f"{time.time() - start:.2f}s"}
+
+
+def three_sleep():
+    time.sleep(3)
 
 
 if __name__ == "__main__":
