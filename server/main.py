@@ -46,6 +46,15 @@ async def single_thread(numbers: List[int] = Query(default=[])):
 
 @app.post("/multi_thread")
 async def multi_thread(numbers: List[int] = Query(default=[])):
+    """
+    A function that performs a multi-threaded operation with a list of numbers.
+
+    Parameters:
+        - numbers (List[int]): A list of integers to process.
+
+    Returns:
+        dict: A dictionary containing the elapsed time in string format.
+    """
 
     start = time.time()
     tasks = []
