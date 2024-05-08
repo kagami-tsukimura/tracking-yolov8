@@ -25,7 +25,7 @@ async def root():
 
 
 @app.post("/single_thread")
-async def single_thread(numbers: List[int] = Query(default=[])):
+async def single_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
     """
     A function that performs a single-threaded operation with a list of numbers.
 
@@ -33,7 +33,7 @@ async def single_thread(numbers: List[int] = Query(default=[])):
         - numbers (List[int]): A list of integers to process.
 
     Returns:
-        dict: A dictionary containing the elapsed time in string format.
+        dict: elapsed time.
     """
 
     start = time.time()
@@ -45,7 +45,7 @@ async def single_thread(numbers: List[int] = Query(default=[])):
 
 
 @app.post("/multi_thread")
-async def multi_thread(numbers: List[int] = Query(default=[])):
+async def multi_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
     """
     A function that performs a multi-threaded operation with a list of numbers.
 
@@ -53,14 +53,15 @@ async def multi_thread(numbers: List[int] = Query(default=[])):
         - numbers (List[int]): A list of integers to process.
 
     Returns:
-        dict: A dictionary containing the elapsed time in string format.
+        dict: elapsed time.
     """
 
     start = time.time()
     tasks = []
 
     # マルチスレッドで並列処理
-    with ThreadPoolExecutor() as executor:
+    # max_workers: 並列処理する最大スレッド数（default: None）
+    with ThreadPoolExecutor(max_workers=len(numbers)) as executor:
         for _ in numbers:
             tasks.append(
                 asyncio.get_event_loop().run_in_executor(executor, three_sleep)
@@ -73,6 +74,10 @@ async def multi_thread(numbers: List[int] = Query(default=[])):
 
 
 def three_sleep():
+    """
+    Sleeps for 3 seconds.
+    """
+
     time.sleep(3)
 
 
