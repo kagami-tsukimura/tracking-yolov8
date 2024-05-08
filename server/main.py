@@ -36,7 +36,6 @@ async def single_thread(numbers: List[int] = Query(default=[])):
         dict: A dictionary containing the elapsed time in string format.
     """
 
-    print(numbers)
     start = time.time()
 
     for _ in numbers:
