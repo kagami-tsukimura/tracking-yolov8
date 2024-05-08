@@ -36,6 +36,25 @@ async def single_thread(numbers: List[int] = Query(default=[])):
     return {"elapsed_time": f"{time.time() - start:.2f}s"}
 
 
+@app.post("/multi_thread")
+async def multi_thread(numbers: List[int] = Query(default=[])):
+
+    start = time.time()
+    tasks = []
+
+    # マルチスレッドで並列処理
+    with ThreadPoolExecutor() as executor:
+        for _ in numbers:
+            tasks.append(
+                asyncio.get_event_loop().run_in_executor(executor, three_sleep)
+            )
+
+    # すべてのタスクが完了するのを待つ
+    await asyncio.gather(*tasks)
+
+    return {"elapsed_time": f"{time.time() - start:.2f}s"}
+
+
 def three_sleep():
     time.sleep(3)
 
