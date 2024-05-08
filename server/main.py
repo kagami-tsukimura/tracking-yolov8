@@ -66,10 +66,11 @@ async def multi_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
         for _ in numbers:
             # ThreadPoolExecutorで実行される非同期タスクを作成→tasksに追加
             tasks.append(
+                # 非同期タスクを別スレッドで実行
                 asyncio.get_event_loop().run_in_executor(executor, three_sleep)
             )
 
-    # すべての非同期タスクを同時実行→すべてのタスクが完了するまで待機
+    # すべてのタスクが完了するまで待機
     await asyncio.gather(*tasks)
 
     return {"elapsed_time": f"{time.time() - start:.2f}s"}
