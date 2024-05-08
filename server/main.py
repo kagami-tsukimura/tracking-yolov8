@@ -26,6 +26,15 @@ async def root():
 
 @app.post("/single_thread")
 async def single_thread(numbers: List[int] = Query(default=[])):
+    """
+    A function that performs a single-threaded operation with a list of numbers.
+
+    Parameters:
+        - numbers (List[int]): A list of integers to process.
+
+    Returns:
+        dict: A dictionary containing the elapsed time in string format.
+    """
 
     print(numbers)
     start = time.time()
