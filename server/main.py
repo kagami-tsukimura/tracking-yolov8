@@ -27,13 +27,13 @@ async def root():
 @app.post("/single_thread")
 async def single_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
     """
-    A function that performs a single-threaded operation with a list of numbers.
+    リストのlengthだけ、3秒sleepをシングルスレッドで繰り返す関数です。
 
-    Parameters:
-        - numbers (List[int]): A list of integers to process.
+    パラメータ:
+        - numbers (List[int]): 処理する整数のリスト。
 
-    Returns:
-        dict: elapsed time.
+    戻り値:
+        dict: 経過時間(seconds)。
     """
 
     start = time.time()
@@ -47,27 +47,29 @@ async def single_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
 @app.post("/multi_thread")
 async def multi_thread(numbers: List[int] = Query(default=[1, 2, 3, 4, 5])):
     """
-    A function that performs a multi-threaded operation with a list of numbers.
+    リストのlengthだけ、3秒sleepをマルチスレッドで繰り返す関数です。
 
-    Parameters:
-        - numbers (List[int]): A list of integers to process.
+    パラメータ:
+        - numbers (List[int]): 処理する整数のリスト。
 
-    Returns:
-        dict: elapsed time.
+    戻り値:
+        dict: 経過時間(seconds)。
     """
 
     start = time.time()
+    # tasks: 並列処理するタスク（リスト）
     tasks = []
 
     # マルチスレッドで並列処理
     # max_workers: 並列処理する最大スレッド数（default: None）
     with ThreadPoolExecutor(max_workers=len(numbers)) as executor:
         for _ in numbers:
+            # ThreadPoolExecutorで実行される非同期タスクを作成→tasksに追加
             tasks.append(
                 asyncio.get_event_loop().run_in_executor(executor, three_sleep)
             )
 
-    # すべてのタスクが完了するのを待つ
+    # すべての非同期タスクを同時実行→すべてのタスクが完了するまで待機
     await asyncio.gather(*tasks)
 
     return {"elapsed_time": f"{time.time() - start:.2f}s"}
