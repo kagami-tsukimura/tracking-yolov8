@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) model.  
+This project focuses on the object detection task using the [YOLOv8](https://github.com/ultralytics/ultralytics) models.  
 The alert of a person who has stayed continuously for a constant frame is issued by object detection.
 
 ## How to Use
